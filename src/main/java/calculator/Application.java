@@ -9,6 +9,12 @@ public class Application {
         String input = Console.readLine();
         List<String> delimiters = new ArrayList<>(List.of(",", ":"));
 
+        // 커스텀 문자 존재 확인 (커스텀 문자는 한 글자여야 한다)
+        if (input.startsWith("//")){
+            delimiters.add(input.substring(2,3));
+            input = input.substring(5);
+        }
+
         // 구분자를 기준으로 덧셈
         String regex = "[" + String.join("", delimiters) + "]";
         String[] nums = input.split(regex);
