@@ -13,20 +13,16 @@ public class Application {
 
         // 커스텀 문자 존재 확인 (커스텀 문자는 한 글자여야 한다)
         if (input.startsWith("//")){
-            if (input.length() < 4) {
+            if(input.length() < 5){
                 throw new IllegalArgumentException("커스텀 입력값이 잘못되었습니다: " + input);
             }
-            char custom = input.charAt(2);
-            int cut;
-            if (input.charAt(3) == '\n') { // 실제 개행
-                cut = 4;
-            } else if (input.startsWith("\\n", 3)) {               // 리터럴 "\n"
-                cut = 5;
-            } else {
-                throw new IllegalArgumentException("커스텀 입력값이 잘못되었습니다: " + input);
+            String custom_end = input.substring(3,5);
+            if(custom_end.equals("\\n")){
+                delimiters.add(input.substring(2,3));
+                input = input.substring(5);
+            }else{
+                throw new IllegalArgumentException("커스텀 입력값이 잘못되었습니다: " + custom_end);
             }
-            delimiters.add(String.valueOf(custom));
-            input = input.substring(cut);
         }
 
         // 빈 문자열은 0 반환
@@ -54,6 +50,9 @@ public class Application {
                     throw new IllegalArgumentException("구분자 다음에 int형 양수가 입력되지 않았습니다.");
                 }
                 int n = Integer.parseInt(str_num);
+                if(n < 0){
+                    throw new IllegalArgumentException("음수는 허용하지 않습니다.");
+                }
                 sum = Math.addExact(sum, n);
             }
         }catch (NumberFormatException nfe){
