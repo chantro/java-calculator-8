@@ -13,16 +13,20 @@ public class Application {
 
         // 커스텀 문자 존재 확인 (커스텀 문자는 한 글자여야 한다)
         if (input.startsWith("//")){
-            if(input.length() < 5){
+            if (input.length() < 4) {
                 throw new IllegalArgumentException("커스텀 입력값이 잘못되었습니다: " + input);
             }
-            String custom_end = input.substring(3,5);
-            if(custom_end.equals("\\n")){
-                delimiters.add(input.substring(2,3));
-                input = input.substring(5);
-            }else{
-                throw new IllegalArgumentException("커스텀 입력값이 잘못되었습니다: " + custom_end);
+            char custom = input.charAt(2);
+            int cut;
+            if (input.charAt(3) == '\n') { // 실제 개행
+                cut = 4;
+            } else if (input.startsWith("\\n", 3)) {               // 리터럴 "\n"
+                cut = 5;
+            } else {
+                throw new IllegalArgumentException("커스텀 입력값이 잘못되었습니다: " + input);
             }
+            delimiters.add(String.valueOf(custom));
+            input = input.substring(cut);
         }
 
         // 빈 문자열은 0 반환
